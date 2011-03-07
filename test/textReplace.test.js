@@ -18,4 +18,4 @@ test("callback replace", function () {
     return match.toUpperCase();
   });  
   equals($('#qunit-fixture p.repeat').html(), "HELLO, world. HELLO, world.");
-y});
+});

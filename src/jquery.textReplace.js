@@ -38,8 +38,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
     return this.each(function () {
       $(this).contents().each(function() {
-        if (this.nodeType === 3) {
-          var textContent = this.textContent,
+        var node = this;
+        if (node.nodeType === 3) {
+          var textContent = node.textContent,
               searchMatch = null;
           
           if (replaceIsString) {
@@ -51,7 +52,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
             }
           }
           
-          this.textContent = textContent;
+          node.textContent = textContent;
         }
       })
     });
