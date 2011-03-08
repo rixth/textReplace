@@ -19,3 +19,29 @@ test("callback replace", function () {
   });  
   equals($('#qunit-fixture p.repeat').html(), "HELLO, world. HELLO, world.");
 });
+
+test("dom injection", function () {
+  expect(1);
+  $('#qunit-fixture p.twitter').textReplace(/\B@[a-zA-Z0-9]+\b/g, function (match) {
+    var link = document.createElement('a');
+    link.href = 'http://twitter.com/' + match.substr(1);
+    link.appendChild(document.createTextNode(match));
+    return link;
+  });
+  equals($('#qunit-fixture p.twitter').html(), 'Hello, <a href="http://twitter.com/charliesheen">@charliesheen</a>.');
+});
+
+test("dom injection mixed with string return", function () {
+  expect(1);
+  $('#qunit-fixture p.twitter-tricky').textReplace(/\B@[a-zA-Z0-9]+\b/g, function (match) {
+    if (match === '@charliesheen') {
+      var link = document.createElement('a');
+      link.href = 'http://twitter.com/' + match.substr(1);
+      link.appendChild(document.createTextNode(match));
+      return link;
+    } else {
+      return match.toUpperCase();
+    }
+  });
+  equals($('#qunit-fixture p.twitter-tricky').html(), 'Hello, <a href="http://twitter.com/charliesheen">@charliesheen</a>, meet @TOM.');
+});

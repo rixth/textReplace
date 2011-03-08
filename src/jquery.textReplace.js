@@ -33,26 +33,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
       throw new TypeError("cannot search for type " + typeof(search));
     }
 
-    // Do this check outside the loop to boost performance
+    // Do these checks outside the loop to boost performance
     var replaceIsString = typeof(replace) === 'string';
+    var replaceIsFunction = typeof(replace) === 'function';
 
-    return this.each(function () {
+    return $(this).each(function () {
       $(this).contents().each(function() {
         var node = this;
         if (node.nodeType === 3) {
-          var textContent = node.textContent,
-              searchMatch = null;
+          var textContent, searchMatch, replaceWith, injectedNodes, nodeStack;
           
           if (replaceIsString) {
-            textContent = textContent.replace(search, replace);
-          } else {
-            // Replace is assumed to be a function
-            while (searchMatch = search.exec(textContent)) {
-              textContent = injectString(textContent, replace(searchMatch[0]), searchMatch.index, searchMatch[0].length);
+            node.textContent = node.textContent.replace(search, replace);
+          } else if (replaceIsFunction) {
+            nodeStack = [node];
+            while(node = nodeStack.pop()) {
+              textContent = node.textContent
+              while (searchMatch = search.exec(textContent)) {
+                replaceWith = replace(searchMatch[0]);
+                if (typeof(replaceWith) === 'string') {
+                  textContent = injectString(textContent, replace(searchMatch[0]), searchMatch.index, searchMatch[0].length);
+                } else if (typeof(replaceWith) === 'object' && replaceWith.childNodes) {
+                  // Create a new fragment , split the text down the middle and inject the DOM element returned
+                  injectedNodes = document.createDocumentFragment();
+                  injectedNodes.appendChild(document.createTextNode(textContent.substr(0, searchMatch.index)));
+                  injectedNodes.appendChild(replaceWith);
+                  
+                  // Append & push the "new" slice of text back on to the stack to be searched
+                  nodeStack.push(injectedNodes.appendChild(document.createTextNode(textContent.substr(searchMatch.index + searchMatch[0].length))));
+                  
+                  // Replace the element on the page
+                  node.parentNode.replaceChild(injectedNodes, node);
+                }
+              }
+              node.textContent = textContent
             }
           }
-          
-          node.textContent = textContent;
         }
       })
     });
