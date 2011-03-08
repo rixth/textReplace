@@ -1,4 +1,4 @@
-/*jshint browser: true, jquery: true, indent: 2, white: true, curly: true, forin: true, noarg: true, immed: true, newcap: true, noempty: true, nomen: true */
+/*jshint browser: true, jquery: true, indent: 2, white: true, curly: true, forin: true, noarg: true, immed: true, newcap: true, noempty: true, nomen: true, boss: true */
 
 /* Copyright (c) 2011, Thomas Rix
 All rights reserved.
@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
     var replaceIsFunction = typeof(replace) === 'function';
 
     return $(this).each(function () {
-      $(this).contents().each(function() {
+      $(this).contents().each(function () {
         var node = this;
         if (node.nodeType === 3) {
           var textContent, searchMatch, replaceWith, injectedNodes, nodeStack;
@@ -47,12 +47,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
             node.textContent = node.textContent.replace(search, replace);
           } else if (replaceIsFunction) {
             nodeStack = [node];
-            while(node = nodeStack.pop()) {
-              textContent = node.textContent
+            while (node = nodeStack.pop()) {
+              textContent = node.textContent;
               while (searchMatch = search.exec(textContent)) {
                 replaceWith = replace(searchMatch[0]);
                 if (typeof(replaceWith) === 'string') {
-                  textContent = injectString(textContent, replace(searchMatch[0]), searchMatch.index, searchMatch[0].length);
+                  textContent = textContent.substr(0, searchMatch.index) + replaceWith + textContent.substr(searchMatch.index + searchMatch[0].length);
                 } else if (typeof(replaceWith) === 'object' && replaceWith.childNodes) {
                   // Create a new fragment , split the text down the middle and inject the DOM element returned
                   injectedNodes = document.createDocumentFragment();
@@ -66,16 +66,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
                   node.parentNode.replaceChild(injectedNodes, node);
                 }
               }
-              node.textContent = textContent
+              node.textContent = textContent;
             }
           }
         }
-      })
+      });
     });
   };
-  
-  // Inject a string in to the middle of another
-  function injectString(string, inject, where, length) {
-    return string.substr(0, where) + inject + string.substr(where + length);
-  }
 }(jQuery));
