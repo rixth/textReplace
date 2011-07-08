@@ -44,4 +44,4 @@ If you return a DOM element/fragment, it will be injected in place.
 
 ## Tests
 
-QUnit based tests available in ./test
+Jasmine based tests available in ./test
