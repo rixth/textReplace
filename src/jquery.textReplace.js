@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
     // Argument type checks
     if (typeof(search) === 'string') {
       search = new RegExp(search, 'g');
-    } else if (typeof(search) !== 'function' && search.constructor.indexOf('RegExp()') === -1) {
+    } else if (typeof(search) !== 'function' && search.constructor.toString().indexOf('RegExp()') === -1) {
       throw new TypeError("cannot search for type " + typeof(search));
     }
 
