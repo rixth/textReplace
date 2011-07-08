@@ -22,26 +22,38 @@ describe("jquery.textReplace", function () {
   });
   
   describe("returning dom elements for replacement", function () {
-    it("should inject dom nodes if they are returned by the replacement function", function () {
-      var fixture = $('<div>Hello @tom</div>');
+    var fixture;
+    beforeEach(function () {
+      fixture = $('<div>Hello @tom, meet @bob</div>');
       setFixtures(fixture);
-      
+    });
+    
+    it("should inject dom nodes if they are returned by the replacement function", function () {
+      expect(fixture.textReplace('@tom', function (match) {
+        var link = document.createElement('a');
+        link.href = 'http://twitter.com/' + match.substr(1);
+        link.appendChild(document.createTextNode(match));
+        return link;
+      }).html()).toEqual('Hello <a href="http://twitter.com/tom">@tom</a>, meet @bob');
+    });
+    it("should work when injecting multiple dom nodes", function () {
       expect(fixture.textReplace(/\B@[a-zA-Z0-9]+\b/g, function (match) {
         var link = document.createElement('a');
         link.href = 'http://twitter.com/' + match.substr(1);
         link.appendChild(document.createTextNode(match));
         return link;
-      }).html()).toEqual('Hello <a href="http://twitter.com/tom">@tom</a>');
+      }).html()).toEqual('Hello <a href="http://twitter.com/tom">@tom</a>,  meet <a href="http://twitter.com/bob">@bob</a>');
     });
     it("should work with mixed dom/text return", function () {
-      var fixture = $('<div>Hello @tom, meet @BOB</div>');
-      setFixtures(fixture);
-      
       expect(fixture.textReplace(/\B@[a-z]+\b/g, function (match) {
-        var link = document.createElement('a');
-        link.href = 'http://twitter.com/' + match.substr(1);
-        link.appendChild(document.createTextNode(match));
-        return link;
+        if (match === '@tom') {
+          var link = document.createElement('a');
+          link.href = 'http://twitter.com/' + match.substr(1);
+          link.appendChild(document.createTextNode(match));
+          return link;
+        } else {
+          return match.toUpperCase();
+        }
       }).html()).toEqual('Hello <a href="http://twitter.com/tom">@tom</a>, meet @BOB');      
     });
   });
