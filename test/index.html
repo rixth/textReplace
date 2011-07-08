@@ -1,25 +1,28 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-                    "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-  <head>
-    <script src="../vendor/jquery-1.5.1.js"></script>
-    <script src="../vendor/qunit.js"></script>
-    <link rel="stylesheet" href="../vendor/qunit.css" type="text/css" media="screen" />
-  
-    <script type="text/javascript" src="../src/jquery.textReplace.js"></script>  
-    <script type="text/javascript" src="textReplace.test.js"></script>  
-  </head>
+<head>
+  <title>Jasmine Test Runner</title>
+  <link rel="stylesheet" type="text/css" href="../vendor/jasmine.css">
+</head>
 <body>
-  <h1 id="qunit-header">jquery.textReplace.js</h1>
-  <h2 id="qunit-banner"></h2>
-  <div id="qunit-testrunner-toolbar"></div>
-  <h2 id="qunit-userAgent"></h2>
-  <ol id="qunit-tests"></ol>
-  <div id="qunit-fixture">
-    <p class="simple">Hello, world.</p>
-    <p class="repeat">Hello, world. Hello, world.</p>
-    <p class="twitter">Hello, @charliesheen.</p>
-    <p class="twitter-tricky">Hello, @charliesheen, meet @tom.</p>
-  </div>
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script type="text/javascript" src="../vendor/jasmine.js"></script>
+<script type="text/javascript" src="../vendor/jasmine-html.js"></script>
+<script type="text/javascript" src="../vendor/jasmine-jquery.js"></script>
+
+<script type="text/javascript" src="../src/jquery.textReplace.js"></script>
+<script type="text/javascript" src="./textReplace.spec.js"></script>
+  
+<script type="text/javascript">
+  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().execute();
+
+  $('#__jasmine_TrivialReporter_showPassed__').attr('checked', true);
+  $('.jasmine_reporter').addClass('show-passed');
+</script>
+
 </body>
 </html>
