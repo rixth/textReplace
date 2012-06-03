@@ -41,8 +41,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
       $(this).contents().each(function () {
         var node = this;
         if (node.nodeType === 3) {
-          var textContent, searchMatch, replaceWith, injectedNodes, nodeStack;
-          
+          var textContent, searchMatch, replaceWith, injectedNodes, nodeStack,
+              textToTheLeftOfMatch, textToTheRightOfMatch, parentNode;
+
           if (replaceIsString) {
             node.textContent = node.textContent.replace(search, replace);
           } else if (replaceIsFunction) {
@@ -52,7 +53,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
               while (searchMatch = search.exec(textContent)) {
                 replaceWith = replace(searchMatch[0]);
                 if (typeof(replaceWith) === 'string') {
-                  textContent = textContent.substr(0, searchMatch.index) + replaceWith + textContent.substr(searchMatch.index + searchMatch[0].length);
+                  textToTheLeftOfMatch = textContent.substr(0, searchMatch.index),
+                  textToTheRightOfMatch = textContent.substr(searchMatch.index + searchMatch[0].length);
+                  textContent = textToTheLeftOfMatch + replaceWith + textToTheRightOfMatch;
                 } else if (typeof(replaceWith) === 'object' && replaceWith.childNodes) {
                   // Create a new fragment , split the text down the middle and inject the DOM element returned
                   injectedNodes = document.createDocumentFragment();
