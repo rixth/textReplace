@@ -1,0 +1,22 @@
+{
+  "name": "text-replace",
+  "version": "0.0.1",
+  "author": "Thomas Rix <tom@rixth.org>",
+  "description": "a small library to replace text in web pages",
+  "main": "./lib/text-replace",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rixth/text-replace.git"
+  },
+  "scripts": {
+    "test": "phantomjs ./spec/phantom-runner.js ./spec/index.html"
+  },
+  "keywords": [
+    "text",
+    "replace",
+    "dom",
+    "ender"
+  ],
+  "license": "MIT"
+}
+
