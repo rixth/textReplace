@@ -7,7 +7,7 @@ describe("jquery.textReplace", function () {
       expect($('<div>Hello world</div>').textReplace(/He[l]{2}o/g, 'Goodbye').html()).toEqual('Goodbye world');
     });
   });
-  
+
   describe("using functions for replacement", function () {
     it("should pass the match to the functions", function () {
       var callback = jasmine.createSpy();
@@ -20,14 +20,14 @@ describe("jquery.textReplace", function () {
       }).html()).toEqual('HELLO world, HELLO world');
     });
   });
-  
+
   describe("returning dom elements for replacement", function () {
     var fixture;
     beforeEach(function () {
       fixture = $('<div>Hello @tom, meet @bob</div>');
       setFixtures(fixture);
     });
-    
+
     it("should inject dom nodes if they are returned by the replacement function", function () {
       expect(fixture.textReplace('@tom', function (match) {
         var link = document.createElement('a');
@@ -42,7 +42,7 @@ describe("jquery.textReplace", function () {
         link.href = 'http://twitter.com/' + match.substr(1);
         link.appendChild(document.createTextNode(match));
         return link;
-      }).html()).toEqual('Hello <a href="http://twitter.com/tom">@tom</a>,  meet <a href="http://twitter.com/bob">@bob</a>');
+      }).html()).toEqual('Hello <a href="http://twitter.com/tom">@tom</a>, meet <a href="http://twitter.com/bob">@bob</a>');
     });
     it("should work with mixed dom/text return", function () {
       expect(fixture.textReplace(/\B@[a-z]+\b/g, function (match) {
@@ -54,7 +54,7 @@ describe("jquery.textReplace", function () {
         } else {
           return match.toUpperCase();
         }
-      }).html()).toEqual('Hello <a href="http://twitter.com/tom">@tom</a>, meet @BOB');      
+      }).html()).toEqual('Hello <a href="http://twitter.com/tom">@tom</a>, meet @BOB');
     });
   });
 });
