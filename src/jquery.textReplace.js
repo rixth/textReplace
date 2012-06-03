@@ -56,20 +56,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
                   textToTheLeftOfMatch = textContent.substr(0, searchMatch.index),
                   textToTheRightOfMatch = textContent.substr(searchMatch.index + searchMatch[0].length);
                   textContent = textToTheLeftOfMatch + replaceWith + textToTheRightOfMatch;
+                  node.textContent = textContent;
                 } else if (typeof(replaceWith) === 'object' && replaceWith.childNodes) {
-                  // Create a new fragment , split the text down the middle and inject the DOM element returned
+                  textToTheLeftOfMatch = document.createTextNode(textContent.substr(0, searchMatch.index)),
+                  textToTheRightOfMatch = document.createTextNode(textContent.substr(searchMatch.index + searchMatch[0].length));
+
+                  // Create a new fragment, split the text around the match and
+                  // inject the DOM element returned
                   injectedNodes = document.createDocumentFragment();
-                  injectedNodes.appendChild(document.createTextNode(textContent.substr(0, searchMatch.index)));
+                  injectedNodes.appendChild(textToTheLeftOfMatch);
                   injectedNodes.appendChild(replaceWith);
-                  
-                  // Append & push the "new" slice of text back on to the stack to be searched
-                  nodeStack.push(injectedNodes.appendChild(document.createTextNode(textContent.substr(searchMatch.index + searchMatch[0].length))));
-                  
-                  // Replace the element on the page
-                  node.parentNode.replaceChild(injectedNodes, node);
+                  injectedNodes.appendChild(textToTheRightOfMatch);
+
+                  // Replace the element
+                  var parentNode = node.parentNode;
+                  parentNode.replaceChild(injectedNodes, node);
+
+                  // Since we changed the nodes when we split this one up, push
+                  // the remainder of the node on to the stack and search for
+                  // more matches
+                  nodeStack.push(parentNode.lastChild);
+                  search.lastIndex = 0;
+                  break;
                 }
               }
-              node.textContent = textContent;
             }
           }
         }
